@@ -90,7 +90,7 @@ class FixedGridODESolver(metaclass=abc.ABCMeta):
 
             niters = torch.ceil((end_time - start_time) / step_size + 1).item()
             t_infer = torch.arange(0, niters, dtype=t.dtype, device=t.device) * step_size + start_time
-            t_infer[-1] = t[-1]
+            t_infer = t_infer.select_scatter(t[-1], 0, -1)
 
             return t_infer
         return _grid_constructor
